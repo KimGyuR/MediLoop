@@ -1,0 +1,313 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  // 프로필 카드
+  profileCard: {
+    borderRadius: 20,
+    borderWidth: 0.5,
+    borderColor: "#e8f5f0",
+    overflow: "hidden",
+    marginBottom: 10,
+  },
+  profileTop: {
+    backgroundColor: "#5DCAA5",
+    padding: 16,
+    paddingBottom: 20,
+  },
+  profileUserRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  profileUserLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  profileAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    borderWidth: 2,
+    borderColor: "rgba(255,255,255,0.4)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  profileName: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#fff",
+  },
+  profileDays: {
+    fontSize: 11,
+    color: "rgba(255,255,255,0.85)",
+    marginTop: 2,
+  },
+  profileTypeBadge: {
+    backgroundColor: "rgba(255,255,255,0.25)",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+  },
+  profileTypeBadgeText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  profileBottom: {
+    backgroundColor: "#fff",
+    padding: 14,
+    paddingHorizontal: 16,
+  },
+  profileInfoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  profileInfoBox: {
+    flex: 1,
+    backgroundColor: "#f5faf8",
+    borderRadius: 12,
+    padding: 10,
+    paddingHorizontal: 12,
+    borderWidth: 0.5,
+    borderColor: "#e8f5f0",
+  },
+  profileInfoDivider: {
+    width: 0.5,
+    backgroundColor: "#e8f5f0",
+    marginHorizontal: 12,
+    alignSelf: "stretch",
+  },
+  profileInfoLabel: {
+    fontSize: 10,
+    color: "#9DB8B0",
+    marginBottom: 5,
+  },
+  profileInfoValue: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#111",
+  },
+  // 생활 습관 카드
+  habitCard: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 0.5,
+    borderColor: "#EAF6F1",
+    gap: 10,
+    marginBottom: 10,
+  },
+  habitTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    marginBottom: 2,
+  },
+  habitTitleText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#222",
+    marginLeft: 5,
+  },
+  habitGreenBox: {
+    backgroundColor: "#F0FAF5",
+    borderRadius: 10,
+    padding: 10,
+    paddingHorizontal: 12,
+    borderLeftWidth: 3,
+    borderLeftColor: "#1D9E75",
+  },
+  habitGreenTitle: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#1D9E75",
+    marginBottom: 4,
+  },
+  habitGreenContent: {
+    fontSize: 12,
+    color: "#2D7A5A",
+    lineHeight: 18,
+  },
+  habitRedBox: {
+    backgroundColor: "#FFF5F5",
+    borderRadius: 10,
+    padding: 10,
+    paddingHorizontal: 12,
+    borderLeftWidth: 3,
+    borderLeftColor: "#E53935",
+  },
+  habitRedTitle: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#E53935",
+    marginBottom: 4,
+  },
+  habitRedContent: {
+    fontSize: 12,
+    color: "#C62828",
+    lineHeight: 18,
+  },
+  criticalBox: {
+    backgroundColor: "#FFF0F0",
+    borderRadius: 10,
+    padding: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1.5,
+    borderColor: "#FFCDD2",
+  },
+  criticalTitle: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: "#E53935",
+    marginBottom: 4,
+    letterSpacing: 0.5,
+  },
+  criticalContent: {
+    fontSize: 12,
+    color: "#C62828",
+    lineHeight: 18,
+  },
+  // 공통 카드
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 0.5,
+    borderColor: "#EAF6F1",
+    marginBottom: 10,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  cardTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  cardTitleText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#222",
+    marginLeft: 5,
+  },
+  viewAllBtn: {
+    fontSize: 12,
+    color: "#5DCAA5",
+    fontWeight: "500",
+  },
+  // 증상 아이템
+  symptomItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
+  },
+  symptomDate: {
+    fontSize: 11,
+    color: "#9DB8B0",
+    marginBottom: 3,
+  },
+  symptomName: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#111",
+  },
+  symptomArrow: {
+    fontSize: 18,
+    color: "#C8EDE0",
+  },
+  // 예약 아이템
+  reservationItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
+  },
+  reservationItemLeft: {
+    flexDirection: "column",
+    gap: 4,
+  },
+  reservationDBadge: {
+    backgroundColor: "#EAF6F1",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 20,
+    alignSelf: "flex-start",
+  },
+  reservationDBadgeText: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: "#1D9E75",
+  },
+  reservationDoneBadge: {
+    backgroundColor: "#F5F5F5",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 20,
+    alignSelf: "flex-start",
+  },
+  reservationDoneBadgeText: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: "#999",
+  },
+  reservationHospName: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#111",
+  },
+  reservationDate: {
+    fontSize: 11,
+    color: "#9DB8B0",
+  },
+  // 설정 카드
+  settingsCard: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    borderWidth: 0.5,
+    borderColor: "#EAF6F1",
+    marginBottom: 10,
+  },
+  settingsItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
+  },
+  settingsItemLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  settingsItemLabel: {
+    fontSize: 14,
+    color: "#222",
+    fontWeight: "500",
+  },
+  settingsItemLabelDanger: {
+    fontSize: 14,
+    color: "#E53935",
+    fontWeight: "500",
+  },
+  settingsArrow: {
+    fontSize: 18,
+    color: "#C8EDE0",
+  },
+});

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: mediloop-backend
+  config:
+    import: optional:classpath:application-secrets.properties
+
+server:
+  port: 8080
+
+openai:
+  api-key: ${OPENAI_API_KEY:}
+  model: ${OPENAI_MODEL:gpt-4.1-mini}
+  base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+
+mediloop:
+  cors:
+    allowed-origin: ${MEDILOOP_ALLOWED_ORIGIN:*}

@@ -1,0 +1,416 @@
+/* 사후 관리 카드 */
+.fitbing-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #EAF6F1;
+  box-shadow: 0 1px 8px rgba(29, 158, 117, 0.06);
+}
+
+.fitbing-header {
+  background: #5DCAA5;
+  padding: 16px 20px;
+}
+
+.fitbing-header p {
+  font-size: 12px;
+  color: #fff;
+  opacity: 0.88;
+  margin-bottom: 4px;
+}
+
+.fitbing-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.fitbing-input-area {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fitbing-label {
+  font-size: 11px;
+  color: #5DCAA5;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fitbing-upload-btn {
+  width: 100%;
+  border: 1.5px dashed #5DCAA5;
+  border-radius: 12px;
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #5DCAA5;
+  font-size: 14px;
+  font-weight: 500;
+  background: #F5FBF8;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.fitbing-upload-icon {
+  font-size: 20px;
+}
+
+.fitbing-textarea {
+  width: 100%;
+  border: 1px solid #E0F0EA;
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-size: 12px;
+  color: #333;
+  background: #FAFDFB;
+  resize: none;
+  font-family: inherit;
+  line-height: 1.7;
+  outline: none;
+}
+
+.fitbing-diagnose-btn {
+  background: #5DCAA5;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 15px 0;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+}
+
+.fitbing-diagnose-btn:disabled {
+  background: #A8DCC9;
+  cursor: not-allowed;
+}
+
+.fitbing-disclaimer {
+  font-size: 10px;
+  color: #B0C8C0;
+  text-align: center;
+  margin-top: -6px;
+}
+
+/* AI 분석 결과 */
+.fitbing-result-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fitbing-result-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #EAF6F1;
+  box-shadow: 0 1px 8px rgba(29, 158, 117, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fitbing-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fitbing-result-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1D9E75;
+}
+
+.fitbing-result-badge {
+  background: #EAF6F1;
+  color: #1D9E75;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.fitbing-disease-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fitbing-disease-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: -0.5px;
+}
+
+.fitbing-disease-sub {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 3px;
+}
+
+.fitbing-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 3px solid #1D9E75;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1D9E75;
+  background: #F5FBF8;
+}
+
+.fitbing-advice {
+  background: #F0FAF5;
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-size: 12px;
+  color: #5DCAA5;
+  line-height: 1.7;
+  border: 1px solid #C8EDE0;
+}
+
+.fitbing-legal {
+  font-size: 10px;
+  color: #B0C8C0;
+  text-align: center;
+}
+
+/* 복약 알림 설정 */
+.alarm-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #EAF6F1;
+  box-shadow: 0 1px 8px rgba(29, 158, 117, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.alarm-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 3px;
+}
+
+.alarm-subtitle {
+  font-size: 11px;
+  color: #9DB8B0;
+}
+
+.dosage-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.dosage-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: #F5F5F5;
+  color: #888;
+  transition: all 0.2s;
+}
+
+.dosage-btn.active {
+  background: #1D9E75;
+  color: #fff;
+}
+
+.push-label {
+  font-size: 12px;
+  color: #9DB8B0;
+  margin-bottom: 10px;
+}
+
+.alarm-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.alarm-item:last-child {
+  border-bottom: none;
+}
+
+.alarm-item-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 2px;
+}
+
+.alarm-item-sub {
+  font-size: 11px;
+  color: #9DB8B0;
+}
+
+.toggle {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+  background: #ddd;
+}
+
+.toggle.on {
+  background: #1D9E75;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle.on .toggle-thumb {
+  left: 22px;
+}
+
+/* 가까운 병원 */
+.nearby-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #EAF6F1;
+  box-shadow: 0 1px 8px rgba(29, 158, 117, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nearby-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nearby-hosp-box {
+  background: #F5FBF8;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid #C8EDE0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nearby-hosp-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nearby-open-badge {
+  background: #EAF6F1;
+  color: #1D9E75;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.nearby-hosp-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.nearby-hosp-meta {
+  font-size: 11px;
+  color: #9DB8B0;
+}
+
+.nearby-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.nearby-btn-reserve {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #5DCAA5;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.nearby-btn-nav {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.more-hosp-btn {
+  width: 100%;
+  padding: 13px 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #3EC99A 0%, #1D9E75 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}

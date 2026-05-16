@@ -1,0 +1,35 @@
+.header {
+  background: #f5faf8;
+  padding: 14px 18px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.header-logo {
+  font-size: 16px;
+  font-weight: 500;
+  color: #222;
+}
+
+.header-bell-btn {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #555;
+  display: flex;
+}
+
+.header-bell-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  background: #E24B4A;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+}

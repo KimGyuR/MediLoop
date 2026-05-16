@@ -1,0 +1,222 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  resultCard: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 0.5,
+    borderColor: "#e8f5f0",
+    marginBottom: 10,
+    gap: 12,
+  },
+  resultHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  resultTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  resultTitle: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: "#333",
+    marginLeft: 5,
+  },
+  badge: {
+    backgroundColor: "#e8f5f0",
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 20,
+  },
+  badgeText: {
+    fontSize: 10,
+    color: "#5DCAA5",
+    fontWeight: "500",
+  },
+  topDisease: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  diseaseName: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#111",
+  },
+  diseaseSub: {
+    fontSize: 11,
+    color: "#aaa",
+    marginTop: 3,
+  },
+  circle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 2.5,
+    borderColor: "#5DCAA5",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  circleText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#5DCAA5",
+  },
+  barList: {
+    gap: 8,
+  },
+  barItem: {
+    gap: 4,
+  },
+  barLabels: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  barLabel: {
+    fontSize: 12,
+    color: "#555",
+  },
+  barTrack: {
+    backgroundColor: "#e8f5f0",
+    borderRadius: 4,
+    height: 5,
+  },
+  barFill: {
+    backgroundColor: "#5DCAA5",
+    borderRadius: 4,
+    height: 5,
+  },
+  adviceBox: {
+    backgroundColor: "#f0faf6",
+    borderRadius: 8,
+    padding: 11,
+    borderWidth: 0.5,
+    borderColor: "#c8ede0",
+  },
+  adviceText: {
+    fontSize: 12,
+    color: "#2D7A5A",
+    lineHeight: 18,
+  },
+  hospSectionTitle: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    marginBottom: 8,
+    paddingLeft: 2,
+  },
+  hospSectionTitleText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#aaa",
+    marginLeft: 5,
+  },
+  hospCard: {
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 0.5,
+    borderColor: "#e8f5f0",
+    marginBottom: 10,
+    gap: 6,
+  },
+  hospCardEmergency: {
+    borderColor: "#ffd0d0",
+  },
+  hospBadge: {
+    backgroundColor: "#e8f5f0",
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 20,
+    alignSelf: "flex-start",
+  },
+  hospBadgeEmergency: {
+    backgroundColor: "#fff0f0",
+  },
+  hospBadgeText: {
+    fontSize: 10,
+    color: "#5DCAA5",
+    fontWeight: "600",
+  },
+  hospBadgeTextEmergency: {
+    color: "#E53935",
+  },
+  hospName: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#111",
+  },
+  hospAddr: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
+  },
+  hospAddrText: {
+    fontSize: 11,
+    color: "#aaa",
+    marginLeft: 3,
+  },
+  hospBtns: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 4,
+  },
+  hospBtnReserve: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 24,
+    backgroundColor: "#5DCAA5",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 5,
+  },
+  hospBtnReserveEmergency: {
+    backgroundColor: "#fff",
+    borderWidth: 0.5,
+    borderColor: "#ddd",
+  },
+  hospBtnReserveText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#fff",
+    marginLeft: 5,
+  },
+  hospBtnNav: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 24,
+    backgroundColor: "#fff",
+    borderWidth: 0.5,
+    borderColor: "#ddd",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 5,
+  },
+  hospBtnNavEmergency: {
+    borderColor: "#ffd0d0",
+  },
+  hospBtnNavText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#333",
+    marginLeft: 5,
+  },
+  disclaimer: {
+    fontSize: 10,
+    color: "#bbb",
+    textAlign: "center",
+    paddingBottom: 8,
+    marginTop: 4,
+  },
+});
