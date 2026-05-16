@@ -2469,33 +2469,30 @@ function ProfileScreen4({
         </View>
       </View>
 
-      <View style={styles.whiteCard}>
-        <View style={styles.profileSectionHeader}>
-          <View style={styles.row}>
-            <Svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <Circle
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="#5DCAA5"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <Polyline
-                points="12 6 12 12 16 14"
-                stroke="#5DCAA5"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </Svg>
-            <Text style={styles.sectionTitleSmall}>  지난 증상 기록</Text>
-          </View>
-          <TouchableOpacity style={styles.profileGhostLink} onPress={() => setShowAllSymptoms((value) => !value)}>
-            <Text style={styles.profileGhostLinkText}>{showAllSymptoms ? '접기' : '전체보기'}</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.whiteCard}>
+  <TouchableOpacity style={styles.profileSectionHeader} onPress={() => setShowAllSymptoms((value) => !value)}>
+    <View style={styles.row}>
+      <Svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <Circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="#5DCAA5"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <Polyline
+          points="12 6 12 12 16 14"
+          stroke="#5DCAA5"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+      <Text style={styles.sectionTitleSmall}>  지난 증상 기록</Text>
+    </View>
+  </TouchableOpacity>
         <View style={styles.profileHistoryList}>
           {visibleSymptoms.map((item) => (
             <TouchableOpacity key={item.id} style={styles.profileHistoryRow} onPress={() => setSelectedSymptom(item)}>
@@ -2503,7 +2500,6 @@ function ProfileScreen4({
                 <Text style={styles.profileHistoryDate}>{item.dateLabel}</Text>
                 <Text style={styles.profileHistoryTitle}>{item.title}</Text>
               </View>
-              <Text style={styles.profileHistoryArrow}>›</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -2631,7 +2627,6 @@ function ProfileScreen4({
                     </Text>
                   </View>
                   <TouchableOpacity onPress={() => setSelectedReservation(item)}>
-                    <Text style={styles.profileHistoryArrow}>›</Text>
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.profileReservationName}>{item.name}</Text>
@@ -2671,7 +2666,6 @@ function ProfileScreen4({
               />
             </Svg>
           <Text style={styles.profileMenuText}>  설정 및 계정 관리</Text>
-          <Text style={styles.profileHistoryArrow}>›</Text>
         </TouchableOpacity>
         <View style={styles.profileMenuDivider} />
         <TouchableOpacity style={styles.profileMenuRow} onPress={onLogout}>
@@ -2701,7 +2695,6 @@ function ProfileScreen4({
               />
             </Svg>
           <Text style={styles.profileMenuLogoutText}>  로그아웃</Text>
-          <Text style={styles.profileHistoryArrow}>›</Text>
         </TouchableOpacity>
       </View>
 
