@@ -13,6 +13,7 @@ backend/src/main/resources/application-secrets.properties
 *.log
 *.png
 *.xml
+!backend/pom.xml
 *.apk
 *.aab
 *.keystore

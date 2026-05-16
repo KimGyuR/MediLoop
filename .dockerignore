@@ -1,0 +1,16 @@
+.git
+.repo_git_backups
+.codex_snapshots
+**/node_modules
+**/.expo
+**/build
+**/.gradle
+**/dist
+**/web-build
+**/target
+**/.idea
+*.log
+*.png
+*.xml
+*.apk
+*.aab

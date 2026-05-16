@@ -626,30 +626,30 @@ public class AnalysisService {
     String criticalWarning = "복약 중 이상 반응이 생기면 즉시 복용을 중단하고 전문의와 상담하세요.";
     String aiSummary = "처방전과 의사 소견을 바탕으로 복약 후 생활 관리 포인트를 정리했습니다.";
 
-    if (containsAny(note, "기침", "인후", "목", "편도", "호흡기")) {
+    if (containsAnyNormalized(note, "기침", "인후", "목", "편도", "호흡기")) {
       habits = new ArrayList<>(List.of("충분한 수면", "실내 습도 50% 유지", "미지근한 물 자주 마시기"));
       avoidFoods = new ArrayList<>(List.of("자극적인 음식", "카페인", "음주"));
       aiSummary = "호흡기 증상 완화에 도움이 되는 생활 습관과 피해야 할 자극 요소를 정리했습니다.";
     }
 
-    if (containsAny(note, "위염", "속쓰림", "장염", "소화", "위장")) {
+    if (containsAnyNormalized(note, "위염", "속쓰림", "장염", "소화", "위장")) {
       habits = new ArrayList<>(List.of("규칙적인 식사", "미음이나 부드러운 음식 위주 섭취", "수분 충분히 보충하기"));
       avoidFoods = new ArrayList<>(List.of("매운 음식", "기름진 음식", "카페인"));
       aiSummary = "위장 자극을 줄이고 회복을 돕는 식습관 중심으로 정리했습니다.";
     }
 
-    if (containsAny(note, "혈압", "고혈압")) {
+    if (containsAnyNormalized(note, "혈압", "고혈압")) {
       habits = new ArrayList<>(List.of("염분 줄이기", "가벼운 유산소 운동", "정해진 시간에 꾸준히 복약하기"));
       avoidFoods = new ArrayList<>(List.of("짠 음식", "과도한 카페인", "음주"));
       aiSummary = "혈압 관리를 위해 식이와 복약 리듬을 함께 맞추는 방향으로 정리했습니다.";
     }
 
-    if (containsAny(note, "아세트아미노펜", "타이레놀", "acetaminophen", "paracetamol")) {
+    if (containsAnyNormalized(note, "아세트아미노펜", "타이레놀", "acetaminophen", "paracetamol")) {
       criticalWarning = "아세트아미노펜 복용 중 음주는 간 손상의 치명적인 원인이 될 수 있습니다.";
       if (!avoidFoods.contains("음주")) {
         avoidFoods.add("음주");
       }
-    } else if (containsAny(note, "항생제", "amoxicillin", "antibiotic")) {
+    } else if (containsAnyNormalized(note, "항생제", "amoxicillin", "antibiotic")) {
       criticalWarning = "항생제는 임의로 복용을 중단하면 재발이나 내성 위험이 커질 수 있으니 처방 기간을 지켜주세요.";
     }
 
@@ -660,7 +660,7 @@ public class AnalysisService {
         aiSummary);
   }
 
-  private boolean containsAny(String text, String... keywords) {
+  private boolean containsAnyNormalized(String text, String... keywords) {
     for (String keyword : keywords) {
       if (text.contains(normalizeFillBag(keyword))) {
         return true;

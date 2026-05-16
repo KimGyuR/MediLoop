@@ -5,7 +5,7 @@ spring:
     import: optional:classpath:application-secrets.properties
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 openai:
   api-key: ${OPENAI_API_KEY:}
@@ -15,3 +15,6 @@ openai:
 mediloop:
   cors:
     allowed-origin: ${MEDILOOP_ALLOWED_ORIGIN:*}
+  public-api:
+    service-key: ${MEDILOOP_PUBLIC_API_SERVICE_KEY:}
+    emergency-service-key: ${MEDILOOP_PUBLIC_API_EMERGENCY_SERVICE_KEY:}
