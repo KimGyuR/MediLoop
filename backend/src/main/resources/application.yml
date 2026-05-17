@@ -8,13 +8,9 @@ server:
   port: ${PORT:8080}
 
 openai:
-  api-key: ${OPENAI_API_KEY:}
   model: ${OPENAI_MODEL:gpt-4.1-mini}
   base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
 
 mediloop:
   cors:
     allowed-origin: ${MEDILOOP_ALLOWED_ORIGIN:*}
-  public-api:
-    service-key: ${MEDILOOP_PUBLIC_API_SERVICE_KEY:}
-    emergency-service-key: ${MEDILOOP_PUBLIC_API_EMERGENCY_SERVICE_KEY:}

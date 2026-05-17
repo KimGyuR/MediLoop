@@ -14,7 +14,7 @@ public class DownloadController {
 
   @GetMapping("/api/download/apk")
   public ResponseEntity<Resource> downloadApk() {
-    ClassPathResource resource = new ClassPathResource("static/apk/mediloop-debug.apk");
+    ClassPathResource resource = new ClassPathResource("static/apk/mediloop-debug.bin");
     if (!resource.exists()) {
       return ResponseEntity.notFound().build();
     }

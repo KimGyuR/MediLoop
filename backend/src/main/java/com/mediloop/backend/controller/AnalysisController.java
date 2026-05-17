@@ -1,9 +1,9 @@
 package com.mediloop.backend.controller;
 
-import com.mediloop.backend.dto.AnalyzeHospitalRequest;
+import com.mediloop.backend.dto.AnalysisResponse;
 import com.mediloop.backend.dto.AnalyzeFillBagRequest;
 import com.mediloop.backend.dto.AnalyzeHomeRequest;
-import com.mediloop.backend.dto.AnalysisResponse;
+import com.mediloop.backend.dto.AnalyzeHospitalRequest;
 import com.mediloop.backend.dto.FillBagAnalysisResponse;
 import com.mediloop.backend.dto.LocationRequest;
 import com.mediloop.backend.service.AnalysisService;

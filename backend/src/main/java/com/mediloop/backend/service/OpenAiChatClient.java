@@ -71,7 +71,7 @@ public class OpenAiChatClient {
     String body = objectMapper.writeValueAsString(payload);
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(baseUrl + "/chat/completions"))
-        .timeout(Duration.ofSeconds(30))
+        .timeout(Duration.ofSeconds(75))
         .header("Authorization", "Bearer " + apiKey)
         .header("Content-Type", "application/json")
         .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))

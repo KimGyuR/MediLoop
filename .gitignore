@@ -2,6 +2,10 @@
 .codex_snapshots/
 .vscode/
 backend/src/main/resources/application-secrets.properties
+backend/src/main/resources/application-secrets.local.properties
+backend/api-test-results.txt
+backend/src/main/resources/static/apk/*.bin
+seungyoon/
 **/node_modules/
 **/.expo/
 **/dist/

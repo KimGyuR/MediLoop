@@ -229,36 +229,6 @@ async function waitForLiveLocation(timeoutMs: number): Promise<Coordinates | nul
   }
 }
 
-const hospitalPlaces: HospitalPlace[] = [
-  {
-    name: 'Gacheon Medical Center',
-    meta: '500m · Seoul Gangnam 123-45 · 09:00 ~ 18:00',
-    tone: 'normal',
-    address: 'Seoul Gangnam 123-45',
-    hours: '09:00 ~ 18:00',
-    phone: '02-1234-5678',
-    distance: '500m',
-  },
-  {
-    name: 'Samsung Medical Center',
-    meta: '1.2km · Seoul Gangnam 456-78 · 08:00 ~ 20:00',
-    tone: 'danger',
-    address: 'Seoul Gangnam 456-78',
-    hours: '08:00 ~ 20:00',
-    phone: '02-2345-6789',
-    distance: '1.2km',
-  },
-  {
-    name: 'Seoul Medical Hospital',
-    meta: '1.5km · Seoul Gangnam 789-01 · 09:00 ~ 19:00',
-    tone: 'normal',
-    address: 'Seoul Gangnam 789-01',
-    hours: '09:00 ~ 19:00',
-    phone: '02-3456-7890',
-    distance: '1.5km',
-  },
-];
-
 LogBox.ignoreAllLogs(true);
 
 const mint = '#5CCAA2';
@@ -267,11 +237,14 @@ const bg = '#F0FAF5';
 const text = '#202927';
 const sub = '#94B0A7';
 const line = '#D7EFE6';
-const API_BASE_URL = 'http://10.0.2.2:8080';
+const RAW_API_BASE_URL = process.env.EXPO_PUBLIC_API_URL?.trim() || 'http://10.0.2.2:8080';
+const API_BASE_URL = RAW_API_BASE_URL.endsWith('/') ? RAW_API_BASE_URL.slice(0, -1) : RAW_API_BASE_URL;
+const DEBUG_INITIAL_SYMPTOM = process.env.EXPO_PUBLIC_DEBUG_SYMPTOM?.trim() || '';
+const DEBUG_AUTO_ANALYZE = process.env.EXPO_PUBLIC_AUTO_ANALYZE === '1';
 
 async function postJson<T>(path: string, payload: unknown): Promise<T> {
   const controller = new AbortController();
-  const timeoutMs = 35000;
+  const timeoutMs = 90000;
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
@@ -505,7 +478,7 @@ export default function App() {
             ]}
             showsVerticalScrollIndicator={false}
           >
-            {tab === 'home' && (
+            <View style={tab === 'home' ? undefined : styles.hiddenScreen}>
               <HomeScreen
                 currentLocation={currentLocation}
                 getCurrentLocation={fetchCurrentCoordinates}
@@ -518,8 +491,8 @@ export default function App() {
                 }}
                 onReserve={(info) => handleReserve(info, 'home')}
               />
-            )}
-            {tab === 'hospital' && (
+            </View>
+            <View style={tab === 'hospital' ? undefined : styles.hiddenScreen}>
               <HospitalScreen2
                 currentLocation={currentLocation}
                 getCurrentLocation={fetchCurrentCoordinates}
@@ -527,8 +500,8 @@ export default function App() {
                 onReserve={(info) => handleReserve(info, 'hospital')}
                 onSearchComplete={(result, symptomText) => handleRecordSymptom('hospital', symptomText, result)}
               />
-            )}
-            {tab === 'fillbag' && (
+            </View>
+            <View style={tab === 'fillbag' ? undefined : styles.hiddenScreen}>
               <FillBagScreen2
                 reservations={reservationHistory}
                 careBundles={careBundles}
@@ -542,15 +515,15 @@ export default function App() {
                 onOpenHospitalTab={() => moveToTab('hospital')}
                 onDeleteReservation={handleDeleteReservation}
               />
-            )}
-            {tab === 'profile' && (
+            </View>
+            <View style={tab === 'profile' ? undefined : styles.hiddenScreen}>
               <ProfileScreen4
                 careBundles={careBundles}
                 reservations={reservationHistory}
                 symptomHistory={symptomHistory}
                 onLogout={handleLogout}
               />
-            )}
+            </View>
           </ScrollView>
           <BottomNav active={tab} onChange={handleTabChange} />
         </View>
@@ -632,7 +605,6 @@ function Header({ compact = false, onBellPress }: { compact?: boolean; onBellPre
       <Text style={[styles.logo, compact && styles.logoSmall]}>Mediloop</Text>
       <TouchableOpacity style={styles.bell} activeOpacity={0.8} onPress={onBellPress}>
         <BellOutlineIcon />
-        <View style={styles.badge} />
       </TouchableOpacity>
     </View>
   );
@@ -675,31 +647,41 @@ function NotificationScreen({
       tone: 'care' as const,
       title: 'Feedback Loop Alert',
       time: '오전 9:00',
+      heading: '복용 상태 확인',
       body: '복용 중인 약의 효과를 확인하고 있어요. 현재 상태를 알려주세요.',
       primary: '예, 나아졌어요',
       secondary: '아직 아파요',
-      onPrimary: onOpenProfile,
+      onPrimary: () =>
+        Alert.alert('상태 업데이트', '회복 상태를 기록했어요. 필요하면 나중에 다시 확인할게요.', [
+          { text: '확인', onPress: onClose },
+        ]),
       onSecondary: onOpenFillBag,
     },
     {
       tone: 'danger' as const,
       title: 'Side Effect Alert',
       time: '오전 11:00',
-      body: '어지럼증이나 두드러기 같은 증상이 나타날 수 있어요. 이런 증상이 있나요?',
+      heading: '어지럼증·두드러기',
+      body: '어지럼증이나 두드러기 같은 부작용 증상이 나타날 수 있어요. 현재 이런 증상이 있나요?',
       primary: '증상 있어요',
       secondary: '괜찮아요',
       onPrimary: onOpenHospital,
-      onSecondary: onClose,
+      onSecondary: () =>
+        Alert.alert('상태 확인', '현재 이상 반응이 없다고 기록했어요.', [{ text: '확인', onPress: onClose }]),
     },
     {
       tone: 'care' as const,
       title: 'Hospital Revisit Recommendation',
       time: '오후 2:00',
-      body: '증상이 3일 이상 지속되고 있어요. 가까운 병원을 찾아드릴게요.',
+      heading: '증상 지속 안내',
+      body: '증상이 3일 이상 지속되고 있어요. 가까운 병원을 다시 찾아드릴게요.',
       primary: '예약하기',
       secondary: '나중에',
       onPrimary: onOpenHospital,
-      onSecondary: onClose,
+      onSecondary: () =>
+        Alert.alert('알림 보관', '나중에 다시 확인할 수 있게 알림을 남겨둘게요.', [
+          { text: '확인', onPress: onClose },
+        ]),
     },
   ];
 
@@ -709,7 +691,15 @@ function NotificationScreen({
         <View style={styles.notificationSheet}>
           <View style={styles.notificationHeader}>
             <TouchableOpacity style={styles.notificationBack} onPress={onClose}>
-              <Text style={styles.notificationBackText}>←</Text>
+              <Svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <Path
+                  d="M15 18l-6-6 6-6"
+                  stroke="#2C2C2A"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </Svg>
             </TouchableOpacity>
             <Text style={styles.notificationTitle}>알림</Text>
             <TouchableOpacity onPress={onClose}>
@@ -724,7 +714,7 @@ function NotificationScreen({
                   <Text style={styles.notificationCardTime}>{item.time}</Text>
                 </View>
                 <View style={styles.notificationCardBody}>
-                  <Text style={styles.notificationCardBodyTitle}>{item.body.split(' ')[0]}</Text>
+                  <Text style={styles.notificationCardBodyTitle}>{item.heading}</Text>
                   <Text style={styles.notificationCardBodyText}>{item.body}</Text>
                   <View style={styles.notificationActionRow}>
                     <TouchableOpacity
@@ -808,32 +798,23 @@ function toHospitalPlaces(result: AnalysisResult): HospitalPlace[] {
   return Array.from(unique.values());
 }
 
-function createFillBagFallback(note: string): FillBagAnalysis {
-  const normalized = note.toLowerCase();
-
-  if (normalized.includes('위') || normalized.includes('속쓰림') || normalized.includes('소화') || normalized.includes('장염')) {
-    return {
-      recommendedHabits: ['규칙적인 식사', '자극 없는 부드러운 음식 섭취', '수분 충분히 보충하기'],
-      avoidFoods: ['매운 음식', '기름진 음식', '카페인'],
-      criticalWarning: '복통, 혈변, 탈수 증상이 심해지면 즉시 병원에 다시 문의하세요.',
-      aiSummary: '위장 부담을 줄이는 식습관과 복약 후 관찰 포인트를 중심으로 정리했습니다.',
-    };
-  }
-
-  if (normalized.includes('기침') || normalized.includes('목') || normalized.includes('인후') || normalized.includes('감기')) {
-    return {
-      recommendedHabits: ['충분한 수면', '실내 습도 50% 유지', '미지근한 물 자주 마시기'],
-      avoidFoods: ['자극적인 음식', '카페인', '음주'],
-      criticalWarning: '해열진통제 복용 중 음주는 간 손상 위험을 높일 수 있으니 피하는 것이 좋습니다.',
-      aiSummary: '호흡기 증상 완화에 도움이 되는 생활 습관과 피해야 할 자극 요소를 반영했습니다.',
-    };
+function toHospitalPlace(
+  hospital: AnalysisResult['hospitals'][number] | AnalysisResult['emergencyHospital'],
+): HospitalPlace | null {
+  if (!hospital) {
+    return null;
   }
 
   return {
-    recommendedHabits: ['충분한 수면', '실내 습도 50% 유지', '수분 섭취 1.5L 이상'],
-    avoidFoods: ['자극적인 음식', '카페인', '음주'],
-    criticalWarning: '복약 중 이상 반응이 생기면 즉시 복용을 중단하고 전문의와 상담하세요.',
-    aiSummary: '처방전과 의사 소견을 바탕으로 복약 후 생활 관리 포인트를 정리했습니다.',
+    name: hospital.name,
+    meta: hospital.meta,
+    tone: hospital.tone,
+    address: hospital.address ?? hospital.meta,
+    hours: hospital.hours ?? '09:00 ~ 18:00',
+    phone: hospital.phone ?? '02-0000-0000',
+    distance: hospital.distance ?? '500m',
+    directionQuery: hospital.directionQuery ?? hospital.name,
+    reserveQuery: hospital.reserveQuery ?? hospital.name,
   };
 }
 
@@ -861,7 +842,7 @@ function HomeScreen({
   onAnalysisComplete: (result: AnalysisResult, symptomText: string) => void;
   onReserve: (info: ReservationInfo) => void;
 }) {
-  const [symptomText, setSymptomText] = useState('');
+  const [symptomText, setSymptomText] = useState(DEBUG_INITIAL_SYMPTOM);
   const [selectedPhoto, setSelectedPhoto] = useState<SelectedPhoto | null>(null);
   const [loading, setLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
@@ -878,7 +859,7 @@ function HomeScreen({
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         quality: 0.7,
         base64: true,
         allowsEditing: false,
@@ -909,13 +890,8 @@ function HomeScreen({
     Keyboard.dismiss();
     setLoading(true);
     try {
-      const activeLocation = await resolveActiveLocation(currentLocation, getCurrentLocation);
-      if (!activeLocation) {
-        const fallback = createMockAnalysis(symptomText, hasPhoto);
-        setAnalysisResult(fallback);
-        onAnalysisComplete(fallback, symptomText);
-        return;
-      }
+      const activeLocation =
+        (await resolveActiveLocation(currentLocation, getCurrentLocation)) ?? currentLocation ?? DEFAULT_COORDINATES;
       onLocationUpdate(activeLocation);
       const result = await postJson<AnalysisResult>('/api/home/analyze', {
         symptomText,
@@ -927,14 +903,23 @@ function HomeScreen({
       });
       setAnalysisResult(result);
       onAnalysisComplete(result, symptomText);
-    } catch {
-      const result = createMockAnalysis(symptomText, hasPhoto);
-      setAnalysisResult(result);
-      onAnalysisComplete(result, symptomText);
+    } catch (error) {
+      console.warn('[HomeAnalyze]', error);
+      Alert.alert('분석 실패', 'AI 분석 또는 병원 추천을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
     } finally {
       setLoading(false);
     }
   };
+
+  const debugAutoRanRef = useRef(false);
+
+  useEffect(() => {
+    if (!DEBUG_AUTO_ANALYZE || debugAutoRanRef.current || loading || analysisResult || !symptomText.trim()) {
+      return;
+    }
+    debugAutoRanRef.current = true;
+    void handleDiagnose();
+  }, [loading, analysisResult, symptomText]);
 
   return (
     <>
@@ -999,39 +984,8 @@ function HomeScreen({
       {analysisResult && (
         <>
           <View style={styles.resultCard}>
-            <View style={styles.resultHeader}>
-              <View style={styles.row}>
-                <Svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <Line
-                x1="18"
-                y1="20"
-                x2="18"
-                y2="10"
-                stroke="#5DCAA5"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-              <Line
-                x1="12"
-                y1="20"
-                x2="12"
-                y2="4"
-                stroke="#5DCAA5"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-              <Line
-                x1="6"
-                y1="20"
-                x2="6"
-                y2="14"
-                stroke="#5DCAA5"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-            </Svg>
-                <Text style={styles.sectionTitle}>분석 결과 요약</Text>
-              </View>
+            <View style={[styles.resultHeader, styles.summaryResultHeader]}>
+              <Text style={styles.sectionTitle}>분석 결과 요약</Text>
               <View style={styles.pill}>
                 <Text style={styles.pillText}>AI 진단 추정</Text>
               </View>
@@ -1055,38 +1009,44 @@ function HomeScreen({
 
           <View style={styles.recommendCard}>
             {primaryHospital && (
-              <HospitalMini2
-                key={`primary-${primaryHospital.name}`}
-                name={primaryHospital.name}
-                meta={primaryHospital.meta}
-                tone={primaryHospital.tone}
-                directionQuery={primaryHospital.directionQuery}
-                onReserve={() =>
-                  onReserve({
-                    name: primaryHospital.name,
-                    address: primaryHospital.address ?? primaryHospital.meta,
-                    hours: primaryHospital.hours ?? '09:00 ~ 18:00',
-                    phone: primaryHospital.phone ?? '02-1234-5678',
-                  })
-                }
-              />
+              <>
+                <Text style={styles.hospitalSectionTitle}>주변 추천 병원</Text>
+                <HospitalMini2
+                  key={`primary-${primaryHospital.name}`}
+                  name={primaryHospital.name}
+                  meta={primaryHospital.meta}
+                  tone={primaryHospital.tone}
+                  directionQuery={primaryHospital.directionQuery}
+                  onReserve={() =>
+                    onReserve({
+                      name: primaryHospital.name,
+                      address: primaryHospital.address ?? primaryHospital.meta,
+                      hours: primaryHospital.hours ?? '09:00 ~ 18:00',
+                      phone: primaryHospital.phone ?? '02-1234-5678',
+                    })
+                  }
+                />
+              </>
             )}
             {emergencyHospital && (
-              <HospitalMini2
-                key={`emergency-${emergencyHospital.name}`}
-                name={emergencyHospital.name}
-                meta={emergencyHospital.meta}
-                tone={emergencyHospital.tone}
-                directionQuery={emergencyHospital.directionQuery}
-                onReserve={() =>
-                  onReserve({
-                    name: emergencyHospital.name,
-                    address: emergencyHospital.address ?? emergencyHospital.meta,
-                    hours: emergencyHospital.hours ?? '09:00 ~ 18:00',
-                    phone: emergencyHospital.phone ?? '02-1234-5678',
-                  })
-                }
-              />
+              <>
+                <Text style={[styles.hospitalSectionTitle, styles.emergencySectionTitle]}>응급 병원 추천</Text>
+                <HospitalMini2
+                  key={`emergency-${emergencyHospital.name}`}
+                  name={emergencyHospital.name}
+                  meta={emergencyHospital.meta}
+                  tone={emergencyHospital.tone}
+                  directionQuery={emergencyHospital.directionQuery}
+                  onReserve={() =>
+                    onReserve({
+                      name: emergencyHospital.name,
+                      address: emergencyHospital.address ?? emergencyHospital.meta,
+                      hours: emergencyHospital.hours ?? '09:00 ~ 18:00',
+                      phone: emergencyHospital.phone ?? '02-1234-5678',
+                    })
+                  }
+                />
+              </>
             )}
             <Text style={styles.bottomNote}>AI 분석은 참고용이며 의학적 진단이 아닙니다.</Text>
           </View>
@@ -1164,12 +1124,12 @@ function HospitalScreen() {
         {showHospitalResults && (
           <>
             <Text style={styles.hospitalSectionTitle}>주변 추천 병원</Text>
-            {hospitalPlaces.map((hospital) => (
+            {[].map((hospital) => (
               <HospitalList
-                key={hospital.name}
-                name={hospital.name}
-                meta={hospital.meta}
-                onPress={() => setSelectedHospital(hospital)}
+                key={(hospital as HospitalPlace).name}
+                name={(hospital as HospitalPlace).name}
+                meta={(hospital as HospitalPlace).meta}
+                onPress={() => setSelectedHospital(hospital as HospitalPlace)}
               />
             ))}
           </>
@@ -1506,7 +1466,10 @@ function HospitalScreen2({
   const [hospitalQuery, setHospitalQuery] = useState('');
   const [showHospitalResults, setShowHospitalResults] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
-  const [recommendations, setRecommendations] = useState<HospitalPlace[]>(hospitalPlaces);
+  const [recommendations, setRecommendations] = useState<HospitalPlace[]>([]);
+  const [searching, setSearching] = useState(false);
+  const emergencyHospital = toHospitalPlace(analysisResult?.emergencyHospital ?? null);
+  const recommendedHospitals = recommendations.filter((hospital) => hospital.tone !== 'danger');
 
   const handleSearch = async () => {
     if (!hospitalQuery.trim()) {
@@ -1516,16 +1479,10 @@ function HospitalScreen2({
 
     Keyboard.dismiss();
     setSelectedHospital(null);
+    setSearching(true);
     try {
-      const activeLocation = await resolveActiveLocation(currentLocation, getCurrentLocation);
-      if (!activeLocation) {
-        const fallback = createMockAnalysis(hospitalQuery, false);
-        setAnalysisResult(fallback);
-        setRecommendations(toHospitalPlaces(fallback));
-        setShowHospitalResults(true);
-        onSearchComplete(fallback, hospitalQuery);
-        return;
-      }
+      const activeLocation =
+        (await resolveActiveLocation(currentLocation, getCurrentLocation)) ?? currentLocation ?? DEFAULT_COORDINATES;
       onLocationUpdate(activeLocation);
       const result = await postJson<AnalysisResult>('/api/hospital/analyze', {
         symptomText: hospitalQuery,
@@ -1539,12 +1496,11 @@ function HospitalScreen2({
       setRecommendations(toHospitalPlaces(result));
       setShowHospitalResults(true);
       onSearchComplete(result, hospitalQuery);
-    } catch {
-      const fallback = createMockAnalysis(hospitalQuery, false);
-      setAnalysisResult(fallback);
-      setRecommendations(toHospitalPlaces(fallback));
-      setShowHospitalResults(true);
-      onSearchComplete(fallback, hospitalQuery);
+    } catch (error) {
+      console.warn('[HospitalAnalyze]', error);
+      Alert.alert('검색 실패', 'AI 분석 또는 병원 추천을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setSearching(false);
     }
   };
 
@@ -1584,14 +1540,17 @@ function HospitalScreen2({
             style={styles.hospitalSearchInput}
           />
           <TouchableOpacity
-            style={styles.searchButton}
+            style={[styles.searchButton, searching && styles.searchButtonDisabled]}
             onPress={handleSearch}
+            disabled={searching}
           >
-            <Text style={styles.searchButtonText}>검색</Text>
+            <Text style={styles.searchButtonText}>{searching ? '검색중...' : '검색'}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.hospitalDiagnosisRow}>
-          <Text style={styles.hospitalDiagnosisTitle}>{analysisResult?.summary.topDisease ?? '단순 감기'}</Text>
+          <Text style={styles.hospitalDiagnosisTitle} numberOfLines={2}>
+            {analysisResult?.summary.topDisease ?? '단순 감기'}
+          </Text>
           <View style={styles.hospitalInlineTrack}>
             <View style={[styles.hospitalInlineFill, { width: `${analysisResult?.summary.confidence ?? 85}%` }]} />
           </View>
@@ -1604,7 +1563,7 @@ function HospitalScreen2({
         {showHospitalResults && (
           <>
             <Text style={styles.hospitalSectionTitle}>주변 추천 병원</Text>
-            {recommendations.map((hospital) => (
+            {recommendedHospitals.map((hospital) => (
               <HospitalList2
                 key={hospital.name}
                 name={hospital.name}
@@ -1625,6 +1584,30 @@ function HospitalScreen2({
                 }
               />
             ))}
+            {emergencyHospital && (
+              <>
+                <Text style={[styles.hospitalSectionTitle, styles.emergencySectionTitle]}>응급 병원 추천</Text>
+                <HospitalList2
+                  key={`emergency-${emergencyHospital.name}`}
+                  name={emergencyHospital.name}
+                  meta={emergencyHospital.meta}
+                  tone={emergencyHospital.tone}
+                  address={emergencyHospital.address}
+                  hours={emergencyHospital.hours}
+                  phone={emergencyHospital.phone}
+                  directionQuery={emergencyHospital.directionQuery}
+                  onPress={() => setSelectedHospital(emergencyHospital)}
+                  onReserve={() =>
+                    onReserve({
+                      name: emergencyHospital.name,
+                      address: emergencyHospital.address,
+                      hours: emergencyHospital.hours,
+                      phone: emergencyHospital.phone,
+                    })
+                  }
+                />
+              </>
+            )}
           </>
         )}
       </View>
@@ -1849,7 +1832,7 @@ function FillBagScreen2({
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         quality: 0.7,
         base64: true,
         allowsEditing: false,
@@ -1903,23 +1886,9 @@ function FillBagScreen2({
       });
       setAnalysisReady(true);
       Alert.alert('분석 완료', '진료 후 관리 요약을 업데이트했습니다.');
-    } catch {
-      const fallback = createFillBagFallback(memo);
-      persistBundle({
-        hasAnalysis: true,
-        doctorNote: memo.trim(),
-        recommendedHabits: fallback.recommendedHabits,
-        avoidFoods: fallback.avoidFoods,
-        criticalWarning: fallback.criticalWarning,
-        aiSummary: fallback.aiSummary,
-        mealTiming,
-        doseFrequency,
-        medPushOn,
-        feedbackPushOn,
-        revisitPushOn,
-      });
-      setAnalysisReady(true);
-      Alert.alert('오프라인 분석 완료', '기본 복약 관리 요약으로 먼저 반영했습니다.');
+    } catch (error) {
+      console.warn('[FillBagAnalyze]', error);
+      Alert.alert('분석 실패', '처방전 또는 상담 내용을 바탕으로 AI 분석을 완료하지 못했습니다. 잠시 후 다시 시도해주세요.');
     } finally {
       setAnalysisLoading(false);
     }
@@ -2101,7 +2070,7 @@ function FillBagScreen2({
                               style={[styles.textArea, styles.textAreaSmall]}
                             />
                             <TouchableOpacity style={styles.primaryButton} onPress={handleCareDiagnose}>
-                              <Text style={styles.primaryButtonText}>{analysisLoading ? '분석 중...' : '진료 후 분석 시작'}</Text>
+                              <Text style={styles.primaryButtonText}>{analysisLoading ? '분석 중...' : '분석 시작'}</Text>
                             </TouchableOpacity>
                             <Text style={styles.disclaimer}>본 결과는 참고용이며 정확한 진단은 의사에게 문의하세요.</Text>
                           </View>
@@ -2123,15 +2092,21 @@ function FillBagScreen2({
                           <View style={styles.stackCardColumn}>
                             <View style={styles.medsGoodBoxTight}>
                               <Text style={styles.habitGoodTitle}>추천 생활습관</Text>
-                              <Text style={styles.habitTextSingle}>{bundle.recommendedHabits.join(', ')}</Text>
+                              <Text style={styles.habitTextSingle}>
+                                {ready ? bundle.recommendedHabits.join(', ') : '상담 내용이나 처방전 분석 후 여기에 반영됩니다.'}
+                              </Text>
                             </View>
                             <View style={styles.medsBadBoxTight}>
                               <Text style={styles.habitBadTitle}>주의해야 할 음식</Text>
-                              <Text style={styles.habitTextSingle}>{bundle.avoidFoods.join(', ')}</Text>
+                              <Text style={styles.habitTextSingle}>
+                                {ready ? bundle.avoidFoods.join(', ') : '분석 전에는 주의 음식 정보가 표시되지 않습니다.'}
+                              </Text>
                             </View>
                             <View style={styles.medsCriticalBoxTight}>
                               <Text style={styles.medsCriticalTitle}>CRITICAL WARNING</Text>
-                              <Text style={styles.habitTextSingle}>{bundle.criticalWarning}</Text>
+                              <Text style={styles.habitTextSingle}>
+                                {ready ? bundle.criticalWarning : '분석 시작 후 중요한 복약 경고가 있으면 이곳에 표시됩니다.'}
+                              </Text>
                             </View>
                           </View>
                         </View>
@@ -2910,7 +2885,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bellIcon: { color: mint, fontSize: 22, fontWeight: '700' },
-  badge: { position: 'absolute', right: -1, top: -3, width: 7, height: 7, borderRadius: 6, backgroundColor: '#E96F73' },
   bellGlyph: {
     width: 18,
     height: 18,
@@ -2953,18 +2927,27 @@ const styles = StyleSheet.create({
     borderRadius: 1.1,
     backgroundColor: mint,
   },
+  hiddenScreen: { display: 'none' },
   scroll: { flex: 1 },
   scrollContent: { paddingHorizontal: 20, paddingBottom: 128 },
   homeScroll: { paddingBottom: 220 },
   hospitalScroll: { paddingHorizontal: 16, paddingBottom: 112 },
   hospitalPage: { paddingBottom: 10 },
   hospitalDiagnosisRow: {
-    height: 38,
+    minHeight: 44,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
   },
-  hospitalDiagnosisTitle: { width: 78, color: text, fontSize: 16, fontWeight: '700' },
+  hospitalDiagnosisTitle: {
+    flex: 1.05,
+    minWidth: 0,
+    marginRight: 10,
+    color: text,
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 22,
+  },
   hospitalInlineTrack: { flex: 1, height: 8, borderRadius: 4, backgroundColor: '#D8F0E8', overflow: 'hidden' },
   hospitalInlineFill: { width: '85%', height: '100%', borderRadius: 4, backgroundColor: '#1EA37B' },
   hospitalInlinePercent: { marginLeft: 16, color: mintDark, fontSize: 15, fontWeight: '800' },
@@ -2980,6 +2963,7 @@ const styles = StyleSheet.create({
   },
   hospitalInfoText: { color: mintDark, fontSize: 15, fontWeight: '800' },
   hospitalSectionTitle: { marginTop: 16, marginBottom: 12, color: text, fontSize: 18, fontWeight: '800' },
+  emergencySectionTitle: { color: '#E56A74', marginTop: 4 },
   fillScroll: { paddingHorizontal: 20, paddingBottom: 148 },
   diagnosisCard: {
     borderRadius: 16,
@@ -3059,19 +3043,27 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     overflow: 'hidden',
   },
-  resultHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
+  resultHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 22,
+    paddingTop: 14,
+    paddingBottom: 10,
+  },
+  summaryResultHeader: { marginBottom: 0 },
   row: { flexDirection: 'row', alignItems: 'center' },
   chartIcon: { color: mint, fontSize: 18, marginRight: 12 },
   sectionTitle: { fontSize: 16, fontWeight: '800', color: text },
   sectionTitleSmall: { fontSize: 16, fontWeight: '800', color: text },
-  pill: { backgroundColor: '#AEE7D2', borderRadius: 15, paddingHorizontal: 14, paddingVertical: 5 },
+  pill: { backgroundColor: '#AEE7D2', borderRadius: 15, paddingHorizontal: 14, paddingVertical: 5, alignSelf: 'flex-start' },
   smallPill: { backgroundColor: '#AEE7D2', borderRadius: 14, paddingHorizontal: 10, paddingVertical: 4 },
   pillText: { color: '#2C8C6E', fontSize: 13, fontWeight: '700' },
   resultMain: {
     borderTopWidth: 1,
     borderTopColor: line,
     paddingHorizontal: 26,
-    paddingTop: 13,
+    paddingTop: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -3124,6 +3116,7 @@ const styles = StyleSheet.create({
   hospitalSearchInput: { flex: 1, minWidth: 0, color: text, fontSize: 14, paddingVertical: 0, marginRight: 8 },
   searchButton: { width: 54, height: 39, borderRadius: 11, backgroundColor: mint, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
   searchButtonText: { color: '#fff', fontSize: 14, fontWeight: '800' },
+  searchButtonDisabled: { opacity: 0.8 },
   symptomCard: { backgroundColor: '#fff', borderRadius: 22, borderWidth: 1, borderColor: '#D7EFE6', paddingHorizontal: 22, paddingVertical: 15, marginBottom: 20 },
   symptomTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   symptomTitle: { flex: 1, fontSize: 19, color: text, fontWeight: '700' },
@@ -3295,22 +3288,22 @@ const styles = StyleSheet.create({
   notificationSheet: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 48,
+    paddingTop: 24,
     paddingBottom: 18,
   },
-  notificationHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 },
+  notificationHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
   notificationBack: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#E1ECE7',
   },
-  notificationBackText: { color: text, fontSize: 18, fontWeight: '800' },
-  notificationTitle: { color: text, fontSize: 17, fontWeight: '800', flex: 1, marginLeft: 10 },
+  notificationBackText: { color: text, fontSize: 19, lineHeight: 20, fontWeight: '700' },
+  notificationTitle: { color: text, fontSize: 17, fontWeight: '800', flex: 1, marginLeft: 12 },
   notificationReadAll: { color: mint, fontSize: 13, fontWeight: '800' },
   notificationCard: {
     backgroundColor: '#fff',

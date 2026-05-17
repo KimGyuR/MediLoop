@@ -1,0 +1,9 @@
+.expo
+.eas-inspect
+android
+ios
+node_modules
+*.log
+*.png
+*.xml
+expo-go-base.apk
